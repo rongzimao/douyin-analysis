@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# 大文件 - 不上传 PPT 和 CSV
+*.pptx
+*.csv
+
+# 输出文件
+analysis_output/
+
+# ES 相关 (云端部署用 pandas 版)
+app_es.py
+import_to_es.py
+test_es_queries.py
+
+# 系统文件
+.DS_Store
+Thumbs.db
