@@ -30,55 +30,19 @@ import warnings
 
 warnings.filterwarnings('ignore')
 
-# 全局 plotly 模板 — 无边框 + 网格对齐
-# 配色：10色调色板
-PLOTLY_COLORS = ["#6366f1", "#8b5cf6", "#10b981", "#f59e0b", "#ef4444",
-                 "#3b82f6", "#ec4899", "#06b6d4", "#84cc16", "#f97316"]
-# 统一字号
-FONT_TITLE = 14; FONT_AXIS = 10; FONT_TICK = 10; FONT_LEGEND = 10
+# ============================================================
+# 语义色板 & 全局常量 — Tableau 简约风格
+# ============================================================
+CLR_PRIMARY   = "#2c7fb8"
+CLR_SECONDARY = "#2ca02c"
+CLR_ACCENT    = "#d62728"
+CLR_WARNING   = "#ff7f0e"
+CLR_INFO      = "#9467bd"
+PLOTLY_COLORS = [CLR_PRIMARY, CLR_SECONDARY, CLR_ACCENT, CLR_WARNING, CLR_INFO]
+PLOTLY_CONFIG = {"displayModeBar": False}
 
-PLOTLY_TEMPLATE = {
-    "layout": {
-        "font": {"family": "Inter, sans-serif", "color": "#64748b", "size": FONT_TICK},
-        "title": {"font": {"size": FONT_TITLE, "color": "#1e293b",
-                            "family": "Inter, sans-serif"},
-                   "x": 0, "xanchor": "left"},
-        "xaxis": {
-            "title": {"font": {"size": FONT_AXIS, "color": "#94a3b8"}},
-            "tickfont": {"size": FONT_TICK, "color": "#94a3b8"},
-            "gridcolor": "#f8fafc", "zerolinecolor": "#f1f5f9",
-            "showline": True, "linewidth": 1, "linecolor": "#e2e8f0",
-            "mirror": False, "showgrid": True,
-        },
-        "yaxis": {
-            "title": {"font": {"size": FONT_AXIS, "color": "#94a3b8"}},
-            "tickfont": {"size": FONT_TICK, "color": "#94a3b8"},
-            "gridcolor": "#f8fafc", "zerolinecolor": "#f1f5f9",
-            "showline": True, "linewidth": 1, "linecolor": "#e2e8f0",
-            "mirror": False, "showgrid": True,
-        },
-        "plot_bgcolor": "#ffffff",
-        "paper_bgcolor": "#ffffff",
-        "margin": {"t": 42, "r": 16, "b": 28, "l": 16},
-        "legend": {
-            "font": {"size": FONT_LEGEND, "color": "#64748b"},
-            "bgcolor": "rgba(255,255,255,0.6)",
-            "bordercolor": "rgba(0,0,0,0)", "borderwidth": 0,
-            "orientation": "h", "yanchor": "top", "y": 1.08,
-            "xanchor": "left", "x": 0,
-        },
-        "colorway": PLOTLY_COLORS,
-        "barmode": "group", "bargap": 0.18, "bargroupgap": 0.1,
-        "hovermode": "x unified",
-        "hoverlabel": {"bgcolor": "#1e293b", "font": {"size": 11, "color": "#fff"},
-                        "bordercolor": "#1e293b", "borderradius": 6},
-    }
-}
-# 图表统一高度常量
-CHART_H_FULL = 420   # 全宽图表
-CHART_H_HALF = 370   # 两列布局中的图表
-CHART_H_SMALL = 320  # 饼图/小提琴等小图表
-CHART_MARGIN = dict(t=42, r=16, b=28, l=16)
+CHART_H_FULL = 420
+CHART_H_HALF = 370
 
 # ============================================================
 # 页面配置
@@ -91,252 +55,41 @@ st.set_page_config(
 )
 
 # ============================================================
-# 全局样式注入
+# 全局样式注入 — 简洁高级仪表盘 (Superset / Tableau 风格)
 # ============================================================
 st.markdown("""
 <style>
-/* ================================================================
-   抖音用户行为数据分析平台 — 现代简约仪表盘样式
-   主色调：低饱和蓝紫渐变 (#6366f1 → #8b5cf6)
-   ================================================================ */
-
-/* ---- 1. 全局基础 ---- */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
 :root {
-    --color-primary: #6366f1;
-    --color-primary-light: #eef2ff;
-    --color-primary-dark: #4f46e5;
-    --color-accent: #8b5cf6;
-    --color-surface: #ffffff;
-    --color-bg: #f8fafc;
-    --color-text: #1e293b;
-    --color-text-secondary: #64748b;
-    --color-text-muted: #94a3b8;
-    --color-border: #e2e8f0;
-    --color-border-light: #f1f5f9;
-    --shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
-    --shadow-md: 0 4px 16px rgba(0,0,0,0.06);
-    --shadow-lg: 0 8px 24px rgba(0,0,0,0.08);
-    --radius-sm: 8px;
-    --radius-md: 12px;
-    --radius-lg: 16px;
+    --bg: #f8f9fa;
+    --surface: #ffffff;
+    --text: #1f2937;
+    --text-secondary: #4b5563;
+    --text-muted: #6b7280;
+    --border: #e5e7eb;
+    --primary: #2c7fb8;
+    --primary-light: #e8f4fd;
+    --radius: 12px;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
 }
 
 html, body, [class*="st-"], .stApp {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
-    color: var(--color-text-secondary);
-    line-height: 1.55;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+    color: var(--text-secondary);
+    line-height: 1.5;
     -webkit-font-smoothing: antialiased;
 }
-.stApp { background-color: var(--color-bg); }
+.stApp { background-color: var(--bg); }
 
-/* 主内容区：1200px 居中 + 网格对齐 */
+/* 主内容区 1200px 居中 */
 section.main > div[data-testid="stVerticalBlock"] {
     max-width: 1200px !important;
     margin: 0 auto !important;
-    padding: 0 1.5rem !important;
+    padding: 0 1rem !important;
 }
 
-/* ---- 2. 左侧导航栏 ---- */
-[data-testid="stSidebar"] {
-    background: linear-gradient(180deg, #fafbff 0%, #ffffff 100%);
-    border-right: 1px solid var(--color-border);
-}
-[data-testid="stSidebar"] > div[data-testid="stVerticalBlock"] {
-    padding: 0.75rem 1rem !important;
-}
-[data-testid="stSidebar"] h2 {
-    font-size: 1.05rem !important; font-weight: 700 !important;
-    color: var(--color-text) !important; margin-bottom: 0.5rem !important;
-}
-[data-testid="stSidebar"] h3 {
-    font-size: 0.75rem !important; font-weight: 600 !important;
-    color: var(--color-text-muted) !important; text-transform: uppercase;
-    letter-spacing: 0.06em; margin-bottom: 0.5rem !important;
-    margin-top: 1.25rem !important;
-}
-[data-testid="stSidebar"] hr {
-    margin: 0.75rem 0; border-color: var(--color-border);
-}
-[data-testid="stSidebar"] span[data-baseweb="tag"] {
-    border-radius: 6px !important; font-size: 0.72rem !important;
-    background: var(--color-primary-light) !important;
-    color: var(--color-primary) !important;
-}
-
-/* ---- 3. KPI 指标卡片 — 网格对齐、统一尺寸 ---- */
-div[data-testid="stMetric"] {
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-md);
-    padding: 1.25rem 0.75rem !important;
-    text-align: center !important;
-    box-shadow: var(--shadow-sm);
-    min-height: 108px !important;
-    height: 100% !important;
-    display: flex !important;
-    flex-direction: column !important;
-    justify-content: center !important;
-    align-items: center !important;
-    transition: all 0.2s ease;
-}
-div[data-testid="stMetric"]:hover {
-    box-shadow: var(--shadow-md);
-    border-color: #c7d2fe;
-    transform: translateY(-1px);
-}
-div[data-testid="stMetric"] label {
-    font-size: 0.7rem !important; font-weight: 600 !important;
-    color: var(--color-text-muted) !important; text-transform: uppercase;
-    letter-spacing: 0.05em; margin-bottom: 6px !important;
-}
-div[data-testid="stMetric"] [data-testid="stMetricValue"] {
-    font-size: 1.55rem !important; font-weight: 700 !important;
-    color: var(--color-text) !important; line-height: 1.15 !important;
-    background: linear-gradient(135deg, var(--color-text) 0%, #334155 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-}
-
-/* ---- 4. 图表列卡片 ---- */
-div[data-testid="stHorizontalBlock"] {
-    gap: 20px !important;
-}
-/* 每列作为卡片：白底+圆角+阴影+内边距 */
-div[data-testid="stHorizontalBlock"] > div[data-testid="column"] {
-    background: #ffffff;
-    border-radius: 12px !important;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08) !important;
-    padding: 20px !important;
-    overflow: hidden;
-}
-/* 卡片内标题 */
-div[data-testid="column"] h3, div[data-testid="column"] .card-title {
-    font-size: 16px !important;
-    font-weight: 700 !important;
-    color: #333333 !important;
-    margin: 0 0 12px 0 !important;
-    text-align: left !important;
-}
-/* 卡片内图表撑满 */
-div[data-testid="column"] [data-testid="stPlotlyChart"] {
-    margin-bottom: 0 !important;
-    border: none !important;
-    box-shadow: none !important;
-    border-radius: 0 !important;
-}
-
-/* ---- 5. Radio 标签页 — 选中态用主色渐变 ---- */
-div[role="radiogroup"] {
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-md);
-    padding: 4px !important;
-    gap: 2px;
-    margin-bottom: 1.25rem !important;
-}
-div[role="radiogroup"] label {
-    border-radius: 10px !important;
-    padding: 0.45rem 1.25rem !important;
-    font-weight: 500 !important; font-size: 0.85rem !important;
-    color: var(--color-text-secondary) !important;
-    transition: all 0.2s ease; margin: 0 !important;
-}
-div[role="radiogroup"] label:hover {
-    color: var(--color-primary) !important;
-    background: var(--color-primary-light) !important;
-}
-div[role="radiogroup"] label[data-selected="true"],
-div[role="radiogroup"] label[aria-checked="true"] {
-    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%) !important;
-    color: #ffffff !important;
-    box-shadow: 0 2px 8px rgba(99,102,241,0.3);
-}
-
-/* ---- 6. 按钮 — 主色渐变 ---- */
-div.stButton > button {
-    border-radius: var(--radius-sm) !important;
-    border: 1px solid var(--color-border) !important;
-    background: var(--color-surface) !important;
-    color: var(--color-text-secondary) !important;
-    font-weight: 500 !important; padding: 0.45rem 1.15rem !important;
-    transition: all 0.2s ease;
-}
-div.stButton > button:hover {
-    background: var(--color-primary-light) !important;
-    border-color: #c7d2fe !important;
-    color: var(--color-primary) !important;
-}
-div.stButton > button[kind="primary"] {
-    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%) !important;
-    color: #ffffff !important; border: none !important;
-    box-shadow: 0 2px 8px rgba(99,102,241,0.25);
-}
-div.stButton > button[kind="primary"]:hover {
-    box-shadow: 0 4px 16px rgba(99,102,241,0.4);
-    transform: translateY(-1px);
-}
-
-/* ---- 7. 图表容器 — 严格网格对齐、无边框 ---- */
-[data-testid="stPlotlyChart"] {
-    margin-bottom: 0.75rem !important;
-    border-radius: 10px !important;
-    overflow: hidden !important;
-    background: #ffffff !important;
-    border: 1px solid #f1f5f9 !important;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.04) !important;
-    padding: 0 !important;
-}
-/* 同一行图表容器高度强制一致 */
-div[data-testid="stHorizontalBlock"] > div[data-testid="stVerticalBlock"] {
-    align-items: stretch !important;
-}
-div[data-testid="stHorizontalBlock"] > div[data-testid="stVerticalBlock"] > div {
-    flex: 1 !important;
-}
-
-/* ---- 8. 分隔线 ---- */
-.stMain hr, section.main hr, hr {
-    border: none !important;
-    border-top: 1px solid var(--color-border) !important;
-    margin: 1.25rem 0 !important;
-}
-
-/* ---- 9. 标题字号统一 (标题14px/二级18px) ---- */
-section.main h3 {
-    font-size: 14px !important; font-weight: 600 !important;
-    color: #1e293b !important;
-    margin: 0 0 6px 0 !important;
-}
-section.main h2 {
-    font-size: 18px !important; font-weight: 700 !important;
-    color: #1e293b !important;
-    margin: 0 0 8px 0 !important;
-}
-
-/* ---- 10. Sidebar 输入控件 ---- */
-[data-testid="stTextArea"] textarea {
-    background: #f8fafc !important; border: 1px solid var(--color-border) !important;
-    border-radius: var(--radius-sm) !important; font-size: 0.84rem !important;
-}
-[data-testid="stTextArea"] textarea:focus {
-    border-color: var(--color-primary) !important;
-    box-shadow: 0 0 0 3px rgba(99,102,241,0.1) !important;
-}
-[data-testid="stMultiSelect"] div[data-baseweb="select"] {
-    border-radius: var(--radius-sm) !important;
-}
-div[data-testid="stSlider"] div[data-testid="stThumbValue"] {
-    background: var(--color-primary) !important; color: #ffffff !important;
-}
-/* Date input */
-div[data-testid="stDateInput"] input {
-    border-radius: var(--radius-sm) !important;
-}
-
-/* ---- 11. 隐藏 Streamlit 默认装饰 ---- */
+/* 隐藏默认装饰 */
 #MainMenu { visibility: hidden; }
 footer { visibility: hidden; }
 header[data-testid="stHeader"] { background: transparent !important; }
@@ -345,39 +98,153 @@ header[data-testid="stHeader"] { background: transparent !important; }
 .stDeployButton { display: none !important; }
 div[data-testid="stStatusWidget"] { display: none !important; }
 
-/* ---- 12. Sidebar Metric (筛选概览数字) ---- */
-[data-testid="stSidebar"] [data-testid="stMetric"] {
-    min-height: unset !important; padding: 0.6rem 0.5rem !important;
-    border-radius: var(--radius-sm) !important;
+/* 侧边栏 */
+[data-testid="stSidebar"] {
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+}
+[data-testid="stSidebar"] h3 {
+    font-size: 0.75rem !important; font-weight: 600 !important;
+    color: var(--text-muted) !important; text-transform: uppercase;
+    letter-spacing: 0.05em; margin-bottom: 0.5rem !important;
+    margin-top: 1rem !important;
+}
+[data-testid="stSidebar"] hr { margin: 0.6rem 0; border-color: var(--border); }
+[data-testid="stSidebar"] textarea {
+    background: #f9fafb !important; border-radius: 8px !important;
+    border-color: var(--border) !important; font-size: 0.82rem !important;
+}
+[data-testid="stSidebar"] textarea:focus {
+    border-color: var(--primary) !important;
+    box-shadow: 0 0 0 3px rgba(44,127,184,0.1) !important;
+}
+
+/* Radio 标签页 */
+div[role="radiogroup"] {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 4px !important;
+    margin-bottom: 1rem !important;
+}
+div[role="radiogroup"] label {
+    border-radius: 10px !important;
+    padding: 0.4rem 1.2rem !important;
+    font-weight: 500 !important; font-size: 0.84rem !important;
+    color: var(--text-secondary) !important;
+    transition: all 0.15s ease; margin: 0 !important;
+}
+div[role="radiogroup"] label:hover {
+    color: var(--primary) !important;
+    background: var(--primary-light) !important;
+}
+div[role="radiogroup"] label[data-selected="true"],
+div[role="radiogroup"] label[aria-checked="true"] {
+    background: var(--primary) !important;
+    color: #ffffff !important;
+    box-shadow: 0 1px 3px rgba(44,127,184,0.3);
+}
+
+/* KPI 指标卡片 */
+div[data-testid="stMetric"] {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1rem 0.5rem !important;
+    text-align: center !important;
+    box-shadow: var(--shadow-sm);
+    transition: box-shadow 0.15s ease;
+}
+div[data-testid="stMetric"]:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+div[data-testid="stMetric"] label {
+    font-size: 0.68rem !important; font-weight: 600 !important;
+    color: var(--text-muted) !important; text-transform: uppercase;
+    letter-spacing: 0.04em; margin-bottom: 4px !important;
+}
+div[data-testid="stMetric"] [data-testid="stMetricValue"] {
+    font-size: 1.7rem !important; font-weight: 700 !important;
+    color: var(--text) !important; line-height: 1.2 !important;
+}
+
+/* ★ 图表容器 — 彻底去边框/阴影/背景 ★ */
+[data-testid="stPlotlyChart"] {
+    border: none !important;
     box-shadow: none !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow: visible !important;
 }
-[data-testid="stSidebar"] [data-testid="stMetric"] [data-testid="stMetricValue"] {
-    font-size: 1.2rem !important;
-    -webkit-text-fill-color: var(--color-primary) !important;
+[data-testid="stPlotlyChart"] > div {
+    border: none !important;
+    box-shadow: none !important;
+    background: transparent !important;
+}
+.plot-container .svg-container { background: transparent !important; }
+
+/* 列对齐 */
+div[data-testid="stHorizontalBlock"] {
+    gap: 20px !important;
+    align-items: stretch !important;
+}
+div[data-testid="stHorizontalBlock"] > div[data-testid="column"] {
+    display: flex !important;
+    flex-direction: column !important;
+}
+div[data-testid="stHorizontalBlock"] > div[data-testid="column"] > div {
+    flex: 1 !important;
 }
 
-/* ---- 13. Expander / 历史问答 ---- */
+/* 按钮 */
+div.stButton > button {
+    border-radius: 8px !important;
+    border: 1px solid var(--border) !important;
+    background: var(--surface) !important;
+    color: var(--text-secondary) !important;
+    font-weight: 500 !important; font-size: 0.84rem !important;
+    padding: 0.4rem 1rem !important;
+    transition: all 0.15s ease;
+}
+div.stButton > button:hover {
+    background: var(--primary-light) !important;
+    border-color: var(--primary) !important;
+    color: var(--primary) !important;
+}
+div.stButton > button[kind="primary"] {
+    background: var(--primary) !important;
+    color: #fff !important; border: none !important;
+}
+
+/* 分隔线 */
+hr { border: none !important; border-top: 1px solid var(--border) !important; margin: 1.5rem 0 !important; }
+
+/* 标题层级 */
+section.main h2 {
+    font-size: 1.15rem !important; font-weight: 600 !important;
+    color: var(--text) !important; margin: 0 0 0.5rem 0 !important;
+}
+section.main h3 {
+    font-size: 0.95rem !important; font-weight: 600 !important;
+    color: var(--text) !important; margin: 0 0 0.4rem 0 !important;
+}
+
+/* 控件 */
+div[data-baseweb="select"] { border-radius: 8px !important; }
+input[data-baseweb="input"] { border-radius: 8px !important; }
+div[data-testid="stSlider"] div[data-testid="stThumbValue"] {
+    background: var(--primary) !important; color: #fff !important;
+}
 [data-testid="stExpander"] {
-    border: 1px solid var(--color-border) !important;
-    border-radius: var(--radius-md) !important;
+    border: 1px solid var(--border) !important;
+    border-radius: var(--radius) !important;
 }
-[data-testid="stStatus"] {
-    border-radius: var(--radius-md) !important;
-    border: 1px solid var(--color-border) !important;
-}
-
-/* ---- 14. 滚动条 ---- */
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
-
-/* ---- 15. 全局下拉/输入控件 ---- */
-div[data-baseweb="select"] { border-radius: var(--radius-sm) !important; }
-input[data-baseweb="input"] { border-radius: var(--radius-sm) !important; }
-
+::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 3px; }
 </style>
 """, unsafe_allow_html=True)
+
 
 # ============================================================
 # Session State 初始化 — 惰性渲染 & 数据就绪标记
@@ -695,19 +562,18 @@ def render_user_analysis(
         fig = px.histogram(
             user_stats_f, x="watch_count", nbins=50,
             log_x=log_x, log_y=True,
-            color_discrete_sequence=[PLOTLY_COLORS[5]],  # blue
+            color_discrete_sequence=[CLR_PRIMARY],  # blue
             title="用户观看次数分布 (Y轴对数)",
             labels={"watch_count": "观看次数"},
         )
-        fig.update_layout(bargap=0.05, height=CHART_H_HALF,
-                          plot_bgcolor="white", paper_bgcolor="white",
+        fig.update_layout(plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)",bargap=0.05, height=CHART_H_HALF,
                           xaxis_showline=False, yaxis_showline=False,
                           legend_borderwidth=0,
                           margin=dict(l=20, r=20, t=20, b=20))
         median_val = user_stats_f["watch_count"].median()
-        fig.add_vline(x=median_val, line_dash="dash", line_color="#ef4444",
+        fig.add_vline(x=median_val, line_dash="dash", line_color=CLR_ACCENT,
                       annotation_text=f"中位数: {median_val:.0f}")
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, use_container_width=True, config=PLOTLY_CONFIG)
 
     with r1r:
         st.markdown("### 用户活跃度分层")
@@ -724,12 +590,11 @@ def render_user_analysis(
             title="用户活跃度分层 (按观看次数)",
         )
         fig.update_traces(textposition="inside", textinfo="percent+value")
-        fig.update_layout(height=CHART_H_HALF,
-                          plot_bgcolor="white", paper_bgcolor="white",
+        fig.update_layout(plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)",height=CHART_H_HALF,
                           xaxis_showline=False, yaxis_showline=False,
                           legend_borderwidth=0,
                           margin=dict(l=20, r=20, t=20, b=20))
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, use_container_width=True, config=PLOTLY_CONFIG)
 
     # Row 2 [Group 1]: 用户城市分布 Top20 + 用户完成率 vs 点赞率 — 严格对齐
     st.markdown("---")
@@ -745,15 +610,14 @@ def render_user_analysis(
             color="record_count", color_continuous_scale="Blues",
             labels={"record_count": "记录数", "city_label": "城市ID"},
         )
-        fig.update_layout(
+        fig.update_layout(plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)",
             yaxis=dict(categoryorder="total ascending"),
             height=CHART_H_FULL,
-            plot_bgcolor="white", paper_bgcolor="white",
             xaxis_showline=False, yaxis_showline=False,
             legend_borderwidth=0,
             margin=dict(l=20, r=20, t=20, b=20),
         )
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, use_container_width=True, config=PLOTLY_CONFIG)
 
     with g1r:
         st.markdown(
@@ -771,14 +635,13 @@ def render_user_analysis(
             },
             render_mode="webgl",
         )
-        fig.update_layout(
+        fig.update_layout(plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)",
             height=CHART_H_FULL,
-            plot_bgcolor="white", paper_bgcolor="white",
             xaxis_showline=False, yaxis_showline=False,
             legend_borderwidth=0,
             margin=dict(l=20, r=20, t=20, b=20),
         )
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, use_container_width=True, config=PLOTLY_CONFIG)
 
     # --- 24小时时段偏好 ---
     st.markdown("### 用户观看时段偏好 (24小时)")
@@ -786,7 +649,7 @@ def render_user_analysis(
     fig.add_trace(
         go.Bar(
             x=hourly_stats["H"], y=hourly_stats["record_count"],
-            name="记录数", marker_color=PLOTLY_COLORS[0], opacity=0.8,
+            name="记录数", marker_color=CLR_PRIMARY, opacity=0.8,
         ),
         secondary_y=False,
     )
@@ -794,7 +657,7 @@ def render_user_analysis(
         go.Scatter(
             x=hourly_stats["H"], y=hourly_stats["avg_finish"] * 100,
             name="完成率(%)", mode="lines+markers",
-            line=dict(color=PLOTLY_COLORS[2], width=2),
+            line=dict(color=CLR_SECONDARY, width=2),
         ),
         secondary_y=True,
     )
@@ -802,19 +665,19 @@ def render_user_analysis(
         go.Scatter(
             x=hourly_stats["H"], y=hourly_stats["avg_like"] * 100,
             name="点赞率(%)", mode="lines+markers",
-            line=dict(color=PLOTLY_COLORS[4], width=2),
+            line=dict(color=CLR_ACCENT, width=2),
         ),
         secondary_y=True,
     )
-    fig.update_layout(
+    fig.update_layout(plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)",
         title="24小时活跃度与行为趋势",
         xaxis=dict(title="小时", dtick=2),
-        height=CHART_H_HALF, margin=CHART_MARGIN,
+        height=CHART_H_HALF,
         hovermode="x unified",
     )
     fig.update_yaxes(title_text="记录数", secondary_y=False)
     fig.update_yaxes(title_text="比率 (%)", secondary_y=True)
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, use_container_width=True, config=PLOTLY_CONFIG)
 
 
 # ---- 4b. 作者分析图表 ----
@@ -830,19 +693,18 @@ def render_author_analysis(author_stats_f, filtered_df):
         fig = px.histogram(
             author_stats_f, x="video_count", nbins=50,
             log_x=log_author_x, log_y=True,
-            color_discrete_sequence=[PLOTLY_COLORS[1]],  # purple
+            color_discrete_sequence=[CLR_INFO],  # purple
             title="作者发布作品数分布",
             labels={"video_count": "作品数"},
         )
-        fig.update_layout(bargap=0.05, height=CHART_H_HALF,
-                          plot_bgcolor="white", paper_bgcolor="white",
+        fig.update_layout(plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)",bargap=0.05, height=CHART_H_HALF,
                           xaxis_showline=False, yaxis_showline=False,
                           legend_borderwidth=0,
                           margin=dict(l=20, r=20, t=20, b=20))
         fig.add_vline(x=author_stats_f["video_count"].median(), line_dash="dash",
-                      line_color="#ef4444",
+                      line_color=CLR_ACCENT,
                       annotation_text=f"中位数: {author_stats_f['video_count'].median():.0f}")
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, use_container_width=True, config=PLOTLY_CONFIG)
 
     with r1r:
         st.markdown("### 作者平均作品时长分布")
@@ -850,19 +712,18 @@ def render_author_analysis(author_stats_f, filtered_df):
         dur_clipped = author_stats_f[author_stats_f["avg_duration"] <= duration_max]
         fig = px.histogram(
             dur_clipped, x="avg_duration", nbins=50,
-            color_discrete_sequence=["#8b5cf6"],
+            color_discrete_sequence=[CLR_INFO],
             title=f"作者平均作品时长分布 (≤{duration_max}s)",
             labels={"avg_duration": "平均时长 (秒)"},
         )
-        fig.update_layout(bargap=0.05, height=CHART_H_HALF,
-                          plot_bgcolor="white", paper_bgcolor="white",
+        fig.update_layout(plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)",bargap=0.05, height=CHART_H_HALF,
                           xaxis_showline=False, yaxis_showline=False,
                           legend_borderwidth=0,
                           margin=dict(l=20, r=20, t=20, b=20))
         fig.add_vline(x=author_stats_f["avg_duration"].median(), line_dash="dash",
-                      line_color="#ef4444",
+                      line_color=CLR_ACCENT,
                       annotation_text=f"中位数: {author_stats_f['avg_duration'].median():.1f}s")
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, use_container_width=True, config=PLOTLY_CONFIG)
 
     # Row 2 [Group 2]: 最活跃作者 + 最受欢迎作者 — 严格对齐
     st.markdown("---")
@@ -877,18 +738,17 @@ def render_author_analysis(author_stats_f, filtered_df):
             y=[f"A-{int(a)}" for a in top_auth["author_id"]],
             x=top_auth["video_count"], orientation="h",
             marker=dict(color=top_auth["video_count"],
-                        colorscale=["#c7d2fe", "#6366f1"], showscale=True),
+                        colorscale=[[0, "#c7d2fe"], [1, CLR_PRIMARY]], showscale=True),
             name="作品数",
         ))
-        fig.update_layout(
+        fig.update_layout(plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)",
             height=CHART_H_FULL, xaxis_title="作品数",
-            plot_bgcolor="white", paper_bgcolor="white",
             xaxis_showline=False, yaxis_showline=False,
             legend_borderwidth=0,
             margin=dict(l=20, r=20, t=20, b=20),
             yaxis=dict(categoryorder="total ascending"),
         )
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, use_container_width=True, config=PLOTLY_CONFIG)
 
     with g2r:
         st.markdown(
@@ -900,20 +760,19 @@ def render_author_analysis(author_stats_f, filtered_df):
             y=[f"A-{int(a)}" for a in top_likes["author_id"]],
             x=top_likes["total_likes"], orientation="h",
             marker=dict(color=top_likes["total_likes"],
-                        colorscale=["#fecaca", "#ef4444"], showscale=True),
+                        colorscale=[[0, "#fecaca"], [1, CLR_ACCENT]], showscale=True),
             name="总点赞数",
             hovertemplate="作者: %{y}<br>点赞: %{x}<br>观看: %{customdata[0]:,}<br>作品: %{customdata[1]}",
             customdata=top_likes[["total_views", "video_count"]],
         ))
-        fig.update_layout(
+        fig.update_layout(plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)",
             height=CHART_H_FULL, xaxis_title="总点赞数",
-            plot_bgcolor="white", paper_bgcolor="white",
             xaxis_showline=False, yaxis_showline=False,
             legend_borderwidth=0,
             margin=dict(l=20, r=20, t=20, b=20),
             yaxis=dict(categoryorder="total ascending"),
         )
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, use_container_width=True, config=PLOTLY_CONFIG)
 
     # --- 作者生态热力图 (scattergl) ---
     st.markdown("### 作者生态: 作品数 vs 总观看数")
@@ -925,8 +784,77 @@ def render_author_analysis(author_stats_f, filtered_df):
         title="作者作品数 vs 总观看数 密度热力图 (作品数≤50)",
         labels={"video_count": "作品数", "total_views": "总观看数"},
     )
-    fig.update_layout(height=CHART_H_FULL, margin=CHART_MARGIN)
-    st.plotly_chart(fig, use_container_width=True)
+    fig.update_layout(plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)",height=CHART_H_FULL)
+    st.plotly_chart(fig, use_container_width=True, config=PLOTLY_CONFIG)
+
+    # --- 作者创作效率矩阵 ---
+    st.markdown("---")
+    st.markdown("### ✍️ 作者创作效率矩阵")
+
+    author_metrics = (
+        filtered_df.groupby("author_id")
+        .agg(
+            video_count=("item_id", "nunique"),
+            total_views=("uid", "count"),
+            avg_like_rate=("like", "mean"),
+        )
+        .reset_index()
+    )
+
+    med_x = author_metrics["video_count"].median()
+    med_y = author_metrics["avg_like_rate"].median()
+
+    # 向量化象限分类
+    hi_x = author_metrics["video_count"] >= med_x
+    hi_y = author_metrics["avg_like_rate"] >= med_y
+    author_metrics["quadrant"] = "低产低互动"
+    author_metrics.loc[hi_x & hi_y, "quadrant"] = "高产高互动"
+    author_metrics.loc[hi_x & ~hi_y, "quadrant"] = "高产低互动"
+    author_metrics.loc[~hi_x & hi_y, "quadrant"] = "低产高互动"
+
+    color_map = {
+        "高产高互动": CLR_ACCENT,
+        "高产低互动": CLR_WARNING,
+        "低产高互动": CLR_PRIMARY,
+        "低产低互动": "#9ca3af",
+    }
+
+    fig = px.scatter(
+        author_metrics,
+        x="video_count",
+        y="avg_like_rate",
+        size="total_views",
+        color="quadrant",
+        color_discrete_map=color_map,
+        opacity=0.7,
+        hover_data={
+            "author_id": True,
+            "video_count": True,
+            "avg_like_rate": ":.3f",
+            "total_views": True,
+        },
+        title="作者创作效率矩阵（气泡大小=总观看数）",
+        labels={
+            "video_count": "作品数",
+            "avg_like_rate": "平均点赞率",
+            "total_views": "总观看数",
+            "quadrant": "象限",
+        },
+    )
+    fig.add_hline(
+        y=med_y, line_dash="dash", line_color=CLR_ACCENT,
+        annotation_text=f"Y中位数: {med_y:.3f}",
+    )
+    fig.add_vline(
+        x=med_x, line_dash="dash", line_color=CLR_ACCENT,
+        annotation_text=f"X中位数: {med_x:.0f}",
+    )
+    fig.update_layout(
+        height=500,
+        plot_bgcolor="rgba(0,0,0,0)",
+        paper_bgcolor="rgba(0,0,0,0)",
+    )
+    st.plotly_chart(fig, use_container_width=True, config=PLOTLY_CONFIG)
 
 
 # ---- 4c. 作品分析图表 ----
@@ -942,22 +870,21 @@ def render_item_analysis(filtered_df, daily_stats_f, heatmap_data):
         dur_data = filtered_df["duration_time"].clip(0, dur_upper)
         fig = px.histogram(
             x=dur_data, nbins=min(dur_upper, 60),
-            color_discrete_sequence=[PLOTLY_COLORS[7]],  # cyan
+            color_discrete_sequence=[CLR_PRIMARY],  # cyan
             title=f"视频时长分布 (≤{dur_upper}s)",
             labels={"x": "时长 (秒)", "y": "记录数"},
         )
-        fig.update_layout(bargap=0.05, height=CHART_H_HALF,
-                          plot_bgcolor="white", paper_bgcolor="white",
+        fig.update_layout(plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)",bargap=0.05, height=CHART_H_HALF,
                           xaxis_showline=False, yaxis_showline=False,
                           legend_borderwidth=0,
                           margin=dict(l=20, r=20, t=20, b=20))
         fig.add_vline(x=filtered_df["duration_time"].median(), line_dash="dash",
-                      line_color="#ef4444",
+                      line_color=CLR_ACCENT,
                       annotation_text=f"中位数: {filtered_df['duration_time'].median():.0f}s")
         fig.add_vline(x=filtered_df["duration_time"].mean(), line_dash="dot",
-                      line_color="#f59e0b",
+                      line_color=CLR_WARNING,
                       annotation_text=f"均值: {filtered_df['duration_time'].mean():.1f}s")
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, use_container_width=True, config=PLOTLY_CONFIG)
 
     with r1r:
         st.markdown("### 每日作品/记录数趋势")
@@ -968,25 +895,24 @@ def render_item_analysis(filtered_df, daily_stats_f, heatmap_data):
             fig.add_trace(go.Scatter(
                 x=daily_stats_f["date"], y=daily_stats_f["total_records"],
                 mode="lines", name="总记录数",
-                line=dict(color="#6366f1", width=2),
+                line=dict(color=CLR_PRIMARY, width=2),
                 fill="tozeroy", fillcolor="rgba(99,102,241,0.12)",
             ))
         if trend_metric in ["去重作品数", "两者"]:
             fig.add_trace(go.Scatter(
                 x=daily_stats_f["date"], y=daily_stats_f["unique_items"],
                 mode="lines", name="去重作品数",
-                line=dict(color="#10b981", width=2),
+                line=dict(color=CLR_SECONDARY, width=2),
                 fill="tozeroy", fillcolor="rgba(16,185,129,0.10)",
             ))
-        fig.update_layout(
+        fig.update_layout(plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)",
             title="每日趋势", xaxis_title="日期", yaxis_title="数量",
             height=CHART_H_HALF, hovermode="x unified",
-            plot_bgcolor="white", paper_bgcolor="white",
             xaxis_showline=False, yaxis_showline=False,
             legend_borderwidth=0,
             margin=dict(l=20, r=20, t=20, b=20),
         )
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, use_container_width=True, config=PLOTLY_CONFIG)
 
     # Row 2 [Group 3]: 作品点赞数分布 + 各Channel行为对比 — 严格对齐
     st.markdown("---")
@@ -1004,17 +930,16 @@ def render_item_analysis(filtered_df, daily_stats_f, heatmap_data):
         fig = px.histogram(
             likes_clipped, x="total_likes",
             nbins=min(likes_bins + 1, 30),
-            color_discrete_sequence=[PLOTLY_COLORS[9]],  # orange
+            color_discrete_sequence=[CLR_WARNING],  # orange
             labels={"total_likes": "点赞数", "y": "作品数量"},
         )
-        fig.update_layout(
+        fig.update_layout(plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)",
             bargap=0.05, height=CHART_H_FULL,
-            plot_bgcolor="white", paper_bgcolor="white",
             xaxis_showline=False, yaxis_showline=False,
             legend_borderwidth=0,
             margin=dict(l=20, r=20, t=20, b=20),
         )
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, use_container_width=True, config=PLOTLY_CONFIG)
 
     with g3r:
         st.markdown(
@@ -1029,24 +954,23 @@ def render_item_analysis(filtered_df, daily_stats_f, heatmap_data):
         fig = go.Figure()
         fig.add_trace(go.Bar(
             x=ch_stats["channel_label"], y=ch_stats["完成率"] * 100,
-            name="完成率(%)", marker_color="#6366f1",
+            name="完成率(%)", marker_color=CLR_PRIMARY,
             text=ch_stats["完成率"].apply(lambda x: f"{x:.1%}"),
             textposition="outside",
         ))
         fig.add_trace(go.Bar(
             x=ch_stats["channel_label"], y=ch_stats["点赞率"] * 100,
-            name="点赞率(%)", marker_color="#8b5cf6",
+            name="点赞率(%)", marker_color=CLR_INFO,
             text=ch_stats["点赞率"].apply(lambda x: f"{x:.2%}"),
             textposition="outside",
         ))
-        fig.update_layout(
+        fig.update_layout(plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)",
             height=CHART_H_FULL, barmode="group",
-            plot_bgcolor="white", paper_bgcolor="white",
             xaxis_showline=False, yaxis_showline=False,
             legend_borderwidth=0,
             margin=dict(l=20, r=20, t=20, b=20),
         )
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, use_container_width=True, config=PLOTLY_CONFIG)
 
     # --- 最佳视频时长分析 ---
     st.markdown("### ⏱️ 最佳视频时长分析")
@@ -1075,7 +999,7 @@ def render_item_analysis(filtered_df, daily_stats_f, heatmap_data):
     fig = go.Figure()
     fig.add_trace(go.Bar(
         x=duration_stats["时长区间"], y=duration_stats["平均完播率"] * 100,
-        name="平均完播率(%)", marker_color=PLOTLY_COLORS[6],  # pink
+        name="平均完播率(%)", marker_color=CLR_INFO,  # pink
         text=duration_stats["平均完播率"].apply(lambda x: f"{x:.2%}"),
         textposition="outside",
     ))
@@ -1085,7 +1009,7 @@ def render_item_analysis(filtered_df, daily_stats_f, heatmap_data):
     fig_trend = px.scatter(
         duration_stats, x="x_num", y=duration_stats["平均完播率"] * 100,
         trendline="lowess", trendline_options=dict(frac=0.35),
-        trendline_color_override=PLOTLY_COLORS[4],  # red
+        trendline_color_override=CLR_ACCENT,  # red
     )
     for trace in fig_trend.data:
         if getattr(trace, "mode", "") == "lines":
@@ -1111,14 +1035,14 @@ def render_item_analysis(filtered_df, daily_stats_f, heatmap_data):
         yshift=25,
     )
 
-    fig.update_layout(
+    fig.update_layout(plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)",
         title="最佳视频时长分析 — 各时长区间平均完播率",
         xaxis_title="视频时长区间",
         yaxis_title="平均完播率 (%)",
-        height=CHART_H_FULL, margin=CHART_MARGIN,
+        height=CHART_H_FULL,
         hovermode="x unified",
     )
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, use_container_width=True, config=PLOTLY_CONFIG)
 
     # --- 时段×星期热力图 ---
     st.markdown("### 时段 × 星期 活跃度热力图")
@@ -1135,8 +1059,8 @@ def render_item_analysis(filtered_df, daily_stats_f, heatmap_data):
             title="时段 × 星期 活跃度热力图",
             labels=dict(x="星期", y="小时", color="记录数"),
         )
-        fig.update_layout(height=CHART_H_HALF, margin=CHART_MARGIN)
-        st.plotly_chart(fig, use_container_width=True)
+        fig.update_layout(plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)",height=CHART_H_HALF)
+        st.plotly_chart(fig, use_container_width=True, config=PLOTLY_CONFIG)
 
     with col_h2:
         st.markdown("#### 数据解读")
@@ -1170,15 +1094,15 @@ def render_dashboard(filtered_df, daily_stats_f, heatmap_data,
                         border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.05);">
                 <h4 style="margin:0 0 14px 0;font-size:0.9rem;font-weight:700;color:#1e293b;">
                 数据概览</h4>
-                <table style="width:100%;border-collapse:collapse;font-size:0.84rem;color:#64748b;">
-                    <tr><td style="padding:7px 0;">📊 总记录数</td><td style="text-align:right;padding:7px 0;font-weight:600;color:#1e293b;">{s['len']:,}</td></tr>
-                    <tr><td style="padding:7px 0;">👤 唯一用户</td><td style="text-align:right;padding:7px 0;font-weight:600;color:#1e293b;">{s['n_users']:,}</td></tr>
-                    <tr><td style="padding:7px 0;">✍️ 唯一作者</td><td style="text-align:right;padding:7px 0;font-weight:600;color:#1e293b;">{s['n_authors']:,}</td></tr>
-                    <tr><td style="padding:7px 0;">🎬 唯一作品</td><td style="text-align:right;padding:7px 0;font-weight:600;color:#1e293b;">{s['n_items']:,}</td></tr>
-                    <tr><td style="padding:7px 0;">🏙️ 城市数</td><td style="text-align:right;padding:7px 0;font-weight:600;color:#1e293b;">{s['n_cities']:,}</td></tr>
-                    <tr><td style="padding:7px 0;">📅 时间跨度</td><td style="text-align:right;padding:7px 0;font-weight:600;color:#6366f1;">{s['min_date']} ~ {s['max_date']}</td></tr>
-                    <tr><td style="padding:7px 0;">✅ 完成率</td><td style="text-align:right;padding:7px 0;font-weight:600;color:#1e293b;">{s['avg_finish']:.2%}</td></tr>
-                    <tr><td style="padding:7px 0;">❤️ 点赞率</td><td style="text-align:right;padding:7px 0;font-weight:600;color:#1e293b;">{s['avg_like']:.3%}</td></tr>
+                <table style="width:100%;border-collapse:collapse;font-size:0.84rem;color:#4b5563;text-align:center;">
+                    <tr><td style="padding:7px 0;">📊 总记录数</td><td style="padding:7px 0;font-weight:600;color:#1f2937;">{s['len']:,}</td></tr>
+                    <tr><td style="padding:7px 0;">👤 唯一用户</td><td style="padding:7px 0;font-weight:600;color:#1f2937;">{s['n_users']:,}</td></tr>
+                    <tr><td style="padding:7px 0;">✍️ 唯一作者</td><td style="padding:7px 0;font-weight:600;color:#1f2937;">{s['n_authors']:,}</td></tr>
+                    <tr><td style="padding:7px 0;">🎬 唯一作品</td><td style="padding:7px 0;font-weight:600;color:#1f2937;">{s['n_items']:,}</td></tr>
+                    <tr><td style="padding:7px 0;">🏙️ 城市数</td><td style="padding:7px 0;font-weight:600;color:#1f2937;">{s['n_cities']:,}</td></tr>
+                    <tr><td style="padding:7px 0;">📅 时间跨度</td><td style="padding:7px 0;font-weight:600;color:#2c7fb8;">{s['min_date']} ~ {s['max_date']}</td></tr>
+                    <tr><td style="padding:7px 0;">✅ 完成率</td><td style="padding:7px 0;font-weight:600;color:#1f2937;">{s['avg_finish']:.2%}</td></tr>
+                    <tr><td style="padding:7px 0;">❤️ 点赞率</td><td style="padding:7px 0;font-weight:600;color:#1f2937;">{s['avg_like']:.3%}</td></tr>
                 </table>
             </div>""",
             unsafe_allow_html=True,
@@ -1190,27 +1114,26 @@ def render_dashboard(filtered_df, daily_stats_f, heatmap_data,
         fig.add_trace(go.Scatter(
             x=daily_stats_f["date"], y=daily_stats_f["total_records"],
             name="记录数", fill="tozeroy",
-            line=dict(color="#6366f1", width=2),
+            line=dict(color=CLR_PRIMARY, width=2),
         ), secondary_y=False)
         fig.add_trace(go.Scatter(
             x=daily_stats_f["date"], y=daily_stats_f["avg_finish"] * 100,
-            name="完成率(%)", line=dict(color="#10b981", width=1.5, dash="dot"),
+            name="完成率(%)", line=dict(color=CLR_SECONDARY, width=1.5, dash="dot"),
         ), secondary_y=True)
         fig.add_trace(go.Scatter(
             x=daily_stats_f["date"], y=daily_stats_f["avg_like"] * 100,
-            name="点赞率(%)", line=dict(color="#ef4444", width=1.5, dash="dot"),
+            name="点赞率(%)", line=dict(color=CLR_ACCENT, width=1.5, dash="dot"),
         ), secondary_y=True)
-        fig.update_layout(
+        fig.update_layout(plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)",
             title="每日记录数 & 行为率趋势", hovermode="x unified",
             height=CHART_H_FULL, legend=dict(orientation="h", y=1.1),
-            plot_bgcolor="white", paper_bgcolor="white",
             xaxis_showline=False, yaxis_showline=False,
             legend_borderwidth=0,
             margin=dict(l=20, r=20, t=20, b=20),
         )
         fig.update_yaxes(title_text="记录数", secondary_y=False)
         fig.update_yaxes(title_text="比率 (%)", secondary_y=True)
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, use_container_width=True, config=PLOTLY_CONFIG)
 
     # Row 2 [Group 4]: 用户行为指标 + Top10 城市 + Channel 分布 — st.columns(3)
     st.markdown("---")
@@ -1226,13 +1149,13 @@ def render_dashboard(filtered_df, daily_stats_f, heatmap_data,
         st.markdown(
             f"""
             <div style="background:#fff;padding:12px 0;">
-            <table style="width:100%;border-collapse:collapse;font-size:0.84rem;color:#64748b;">
-                <tr><td style="padding:7px 0;">人均观看次数</td><td style="text-align:right;padding:7px 0;font-weight:600;color:#1e293b;">{s['avg_watch_per_user']:.1f}</td></tr>
-                <tr><td style="padding:7px 0;">人均观看不同作品</td><td style="text-align:right;padding:7px 0;font-weight:600;color:#1e293b;">{s['avg_items_per_user']:.1f}</td></tr>
-                <tr><td style="padding:7px 0;">平均视频时长</td><td style="text-align:right;padding:7px 0;font-weight:600;color:#1e293b;">{s['avg_duration']:.1f}s</td></tr>
-                <tr><td style="padding:7px 0;">作者人均作品</td><td style="text-align:right;padding:7px 0;font-weight:600;color:#1e293b;">{s['avg_items_per_author']:.1f}</td></tr>
-                <tr><td style="padding:7px 0;">周末完成率</td><td style="text-align:right;padding:7px 0;font-weight:600;color:#1e293b;">{wkend_finish}</td></tr>
-                <tr><td style="padding:7px 0;">工作日完成率</td><td style="text-align:right;padding:7px 0;font-weight:600;color:#1e293b;">{wkday_finish}</td></tr>
+            <table style="width:100%;border-collapse:collapse;font-size:0.84rem;color:#4b5563;text-align:center;">
+                <tr><td style="padding:7px 0;">人均观看次数</td><td style="padding:7px 0;font-weight:600;color:#1f2937;">{s['avg_watch_per_user']:.1f}</td></tr>
+                <tr><td style="padding:7px 0;">人均观看不同作品</td><td style="padding:7px 0;font-weight:600;color:#1f2937;">{s['avg_items_per_user']:.1f}</td></tr>
+                <tr><td style="padding:7px 0;">平均视频时长</td><td style="padding:7px 0;font-weight:600;color:#1f2937;">{s['avg_duration']:.1f}s</td></tr>
+                <tr><td style="padding:7px 0;">作者人均作品</td><td style="padding:7px 0;font-weight:600;color:#1f2937;">{s['avg_items_per_author']:.1f}</td></tr>
+                <tr><td style="padding:7px 0;">周末完成率</td><td style="padding:7px 0;font-weight:600;color:#1f2937;">{wkend_finish}</td></tr>
+                <tr><td style="padding:7px 0;">工作日完成率</td><td style="padding:7px 0;font-weight:600;color:#1f2937;">{wkday_finish}</td></tr>
             </table></div>""",
             unsafe_allow_html=True,
         )
@@ -1244,16 +1167,15 @@ def render_dashboard(filtered_df, daily_stats_f, heatmap_data,
         top10 = s["top10_cities"]
         fig = px.bar(
             top10, x="count", y="city", orientation="h",
-            color="count", color_continuous_scale=["#c7d2fe", "#6366f1"],
+            color="count", color_continuous_scale=[[0, "#c7d2fe"], [1, CLR_PRIMARY]],
         )
-        fig.update_layout(
+        fig.update_layout(plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)",
             height=CHART_H_FULL, yaxis=dict(categoryorder="total ascending"),
-            plot_bgcolor="white", paper_bgcolor="white",
             xaxis_showline=False, yaxis_showline=False,
             legend_borderwidth=0,
             margin=dict(l=20, r=20, t=20, b=20),
         )
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, use_container_width=True, config=PLOTLY_CONFIG)
 
     with g4c:
         st.markdown(
@@ -1264,14 +1186,13 @@ def render_dashboard(filtered_df, daily_stats_f, heatmap_data,
             ch_items, values="count", names="channel",
             color_discrete_sequence=PLOTLY_COLORS,
         )
-        fig.update_layout(
+        fig.update_layout(plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)",
             height=CHART_H_FULL,
-            plot_bgcolor="white", paper_bgcolor="white",
             xaxis_showline=False, yaxis_showline=False,
             legend_borderwidth=0,
             margin=dict(l=20, r=20, t=20, b=20),
         )
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, use_container_width=True, config=PLOTLY_CONFIG)
 
     # 底部: 时段分布 + Violin
     st.markdown("---")
@@ -1284,7 +1205,7 @@ def render_dashboard(filtered_df, daily_stats_f, heatmap_data,
         fig.add_trace(
             go.Bar(
                 x=hourly_dash["H"], y=hourly_dash["记录数"],
-                name="记录数", marker_color="#6366f1", opacity=0.75,
+                name="记录数", marker_color=CLR_PRIMARY, opacity=0.75,
             ),
             secondary_y=False,
         )
@@ -1292,17 +1213,17 @@ def render_dashboard(filtered_df, daily_stats_f, heatmap_data,
             go.Scatter(
                 x=hourly_dash["H"], y=hourly_dash["完成率"] * 100,
                 name="完成率(%)", mode="lines+markers",
-                line=dict(color="#10b981", width=2),
+                line=dict(color=CLR_SECONDARY, width=2),
             ),
             secondary_y=True,
         )
-        fig.update_layout(
+        fig.update_layout(plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)",
             title="24小时分布", height=CHART_H_HALF, hovermode="x unified",
-            margin=CHART_MARGIN, xaxis=dict(dtick=2),
+            xaxis=dict(dtick=2),
         )
         fig.update_yaxes(title_text="记录数", secondary_y=False)
         fig.update_yaxes(title_text="比率(%)", secondary_y=True)
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, use_container_width=True, config=PLOTLY_CONFIG)
 
     with bottom_col2:
         st.markdown("### 📉 时长分布 (按Channel)")
@@ -1311,7 +1232,7 @@ def render_dashboard(filtered_df, daily_stats_f, heatmap_data,
             filtered_df["channel"].value_counts().nlargest(4).index.tolist()
         )
         fig = go.Figure()
-        violin_colors = ["#6366f1", "#8b5cf6", "#10b981", "#f59e0b"]
+        violin_colors = [CLR_PRIMARY, CLR_INFO, CLR_SECONDARY, CLR_WARNING]
         for i, ch in enumerate(top4):
             ch_data = filtered_df.loc[
                 filtered_df["channel"] == ch, "duration_time"
@@ -1323,12 +1244,54 @@ def render_dashboard(filtered_df, daily_stats_f, heatmap_data,
                 fillcolor=violin_colors[i],
                 opacity=0.55,
             ))
-        fig.update_layout(
+        fig.update_layout(plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)",
             title="各Channel视频时长分布 (≤30s)",
-            height=CHART_H_HALF, margin=CHART_MARGIN,
+            height=CHART_H_HALF,
             yaxis_title="时长 (秒)",
         )
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, use_container_width=True, config=PLOTLY_CONFIG)
+
+    # --- 城市竞争力雷达图 ---
+    with st.expander("🏆 城市竞争力雷达图（Top 10）", expanded=False):
+        top10_cities_rc = (
+            filtered_df["user_city"].value_counts().nlargest(10).index.tolist()
+        )
+        df_top10 = filtered_df[filtered_df["user_city"].isin(top10_cities_rc)]
+
+        radar_data = df_top10.groupby("user_city").agg(
+            finish_rate=("finish", "mean"),
+            like_rate=("like", "mean"),
+            watch_per_user=("uid", lambda x: len(x) / max(x.nunique(), 1)),
+            avg_duration=("duration_time", "mean"),
+        ).reset_index()
+        radar_data["city_label"] = radar_data["user_city"].astype(str)
+
+        # Min-Max 归一化 (0-1)
+        metrics = ["finish_rate", "like_rate", "watch_per_user", "avg_duration"]
+        for col in metrics:
+            vmin, vmax = radar_data[col].min(), radar_data[col].max()
+            radar_data[f"{col}_norm"] = (radar_data[col] - vmin) / (vmax - vmin + 1e-10)
+
+        categories = ["完成率", "点赞率", "人均观看", "平均时长"]
+
+        fig = go.Figure()
+        for _, row in radar_data.iterrows():
+            fig.add_trace(go.Scatterpolar(
+                r=[row["finish_rate_norm"], row["like_rate_norm"],
+                   row["watch_per_user_norm"], row["avg_duration_norm"]],
+                theta=categories,
+                fill="toself",
+                name=row["city_label"],
+            ))
+
+        fig.update_layout(
+            polar=dict(radialaxis=dict(visible=True, range=[0, 1])),
+            title="Top 10 城市多指标对比（归一化值）",
+            height=500,
+            plot_bgcolor="rgba(0,0,0,0)",
+            paper_bgcolor="rgba(0,0,0,0)",
+        )
+        st.plotly_chart(fig, use_container_width=True, config=PLOTLY_CONFIG)
 
 
 # ============================================================
@@ -1373,10 +1336,7 @@ def main():
 
     # ---- 5c. 侧边栏筛选器 ----
     st.sidebar.markdown(
-        "<div style='font-size: 1.2rem; font-weight: 800; "
-        "background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%); "
-        "-webkit-background-clip: text; -webkit-text-fill-color: transparent; "
-        "background-clip: text; padding-bottom: 0.25rem;'>"
+        "<div style='font-size:1.15rem;font-weight:700;color:#1f2937;padding-bottom:0.25rem;'>"
         "🎵 抖音数据分析</div>",
         unsafe_allow_html=True,
     )
